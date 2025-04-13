@@ -1,0 +1,856 @@
+Putting my whole folder tree here first so that you understand what I’m working on:
+
+C:.
+├───.github
+│   └───workflows
+├───.idea
+├───target
+├───wrangler-api
+│   ├───src
+│   │   ├───main
+│   │   │   └───java
+│   │   │       └───io
+│   │   │           └───cdap
+│   │   │               └───wrangler
+│   │   │                   └───api
+│   │   │                       ├───annotations
+│   │   │                       ├───lineage
+│   │   │                       └───parser
+│   │   └───test
+│   │       └───java
+│   │           └───io
+│   │               └───cdap
+│   │                   └───wrangler
+│   │                       └───api
+│   │                           └───parser
+│   └───target
+│       ├───classes
+│       │   └───io
+│       │       └───cdap
+│       │           └───wrangler
+│       │               └───api
+│       │                   ├───annotations
+│       │                   ├───lineage
+│       │                   └───parser
+│       ├───generated-sources
+│       │   └───annotations
+│       ├───generated-test-sources
+│       │   └───test-annotations
+│       ├───maven-archiver
+│       ├───maven-status
+│       │   └───maven-compiler-plugin
+│       │       ├───compile
+│       │       │   └───default-compile
+│       │       └───testCompile
+│       │           └───default-testCompile
+│       └───test-classes
+│           └───io
+│               └───cdap
+│                   └───wrangler
+│                       └───api
+│                           └───parser
+├───wrangler-core
+│   ├───src
+│   │   ├───main
+│   │   │   ├───antlr4
+│   │   │   │   └───io
+│   │   │   │       └───cdap
+│   │   │   │           └───wrangler
+│   │   │   │               └───parser
+│   │   │   ├───java
+│   │   │   │   └───io
+│   │   │   │       └───cdap
+│   │   │   │           ├───directives
+│   │   │   │           │   ├───aggregates
+│   │   │   │           │   ├───column
+│   │   │   │           │   ├───currency
+│   │   │   │           │   ├───datamodel
+│   │   │   │           │   ├───date
+│   │   │   │           │   ├───datetime
+│   │   │   │           │   ├───external
+│   │   │   │           │   ├───language
+│   │   │   │           │   ├───lookup
+│   │   │   │           │   ├───nlp
+│   │   │   │           │   │   └───internal
+│   │   │   │           │   ├───parser
+│   │   │   │           │   ├───row
+│   │   │   │           │   ├───transformation
+│   │   │   │           │   ├───validation
+│   │   │   │           │   │   └───conformers
+│   │   │   │           │   ├───writer
+│   │   │   │           │   └───xml
+│   │   │   │           ├───functions
+│   │   │   │           └───wrangler
+│   │   │   │               ├───clients
+│   │   │   │               ├───codec
+│   │   │   │               ├───datamodel
+│   │   │   │               ├───directives
+│   │   │   │               ├───dq
+│   │   │   │               ├───executor
+│   │   │   │               ├───expression
+│   │   │   │               ├───i18n
+│   │   │   │               ├───lineage
+│   │   │   │               ├───metrics
+│   │   │   │               ├───parser
+│   │   │   │               ├───registry
+│   │   │   │               ├───sampling
+│   │   │   │               ├───schema
+│   │   │   │               ├───statistics
+│   │   │   │               ├───utils
+│   │   │   │               └───validator
+│   │   │   └───resources
+│   │   │       ├───schemas
+│   │   │       └───user
+│   │   └───test
+│   │       ├───java
+│   │       │   ├───com
+│   │       │   │   └───example
+│   │       │   │       └───tutorial
+│   │       │   └───io
+│   │       │       └───cdap
+│   │       │           ├───directives
+│   │       │           │   ├───aggregates
+│   │       │           │   ├───column
+│   │       │           │   ├───currency
+│   │       │           │   ├───datamodel
+│   │       │           │   ├───datetime
+│   │       │           │   ├───external
+│   │       │           │   ├───lookup
+│   │       │           │   ├───npl
+│   │       │           │   ├───parser
+│   │       │           │   ├───row
+│   │       │           │   ├───transformation
+│   │       │           │   ├───validation
+│   │       │           │   │   └───conformers
+│   │       │           │   └───writer
+│   │       │           ├───functions
+│   │       │           └───wrangler
+│   │       │               ├───clients
+│   │       │               ├───codec
+│   │       │               ├───config
+│   │       │               ├───datamodel
+│   │       │               ├───dq
+│   │       │               ├───executor
+│   │       │               ├───expression
+│   │       │               ├───i18n
+│   │       │               ├───lineage
+│   │       │               ├───parser
+│   │       │               ├───registry
+│   │       │               ├───statistics
+│   │       │               ├───utils
+│   │       │               └───validator
+│   │       └───resources
+│   │           └───user
+│   └───target
+│       ├───classes
+│       │   ├───io
+│       │   │   └───cdap
+│       │   │       ├───directives
+│       │   │       │   ├───aggregates
+│       │   │       │   ├───column
+│       │   │       │   ├───currency
+│       │   │       │   ├───datamodel
+│       │   │       │   ├───date
+│       │   │       │   ├───datetime
+│       │   │       │   ├───external
+│       │   │       │   ├───language
+│       │   │       │   ├───lookup
+│       │   │       │   ├───nlp
+│       │   │       │   │   └───internal
+│       │   │       │   ├───parser
+│       │   │       │   ├───row
+│       │   │       │   ├───transformation
+│       │   │       │   ├───validation
+│       │   │       │   │   └───conformers
+│       │   │       │   ├───writer
+│       │   │       │   └───xml
+│       │   │       ├───functions
+│       │   │       └───wrangler
+│       │   │           ├───clients
+│       │   │           ├───codec
+│       │   │           ├───datamodel
+│       │   │           ├───dq
+│       │   │           ├───executor
+│       │   │           ├───expression
+│       │   │           ├───i18n
+│       │   │           ├───lineage
+│       │   │           ├───metrics
+│       │   │           ├───parser
+│       │   │           ├───registry
+│       │   │           ├───sampling
+│       │   │           ├───schema
+│       │   │           ├───statistics
+│       │   │           ├───utils
+│       │   │           └───validator
+│       │   ├───schemas
+│       │   └───user
+│       ├───generated-sources
+│       │   ├───annotations
+│       │   └───antlr4
+│       │       └───io
+│       │           └───cdap
+│       │               └───wrangler
+│       │                   └───parser
+│       ├───generated-test-sources
+│       │   └───test-annotations
+│       ├───maven-archiver
+│       ├───maven-status
+│       │   ├───antlr4
+│       │   └───maven-compiler-plugin
+│       │       ├───compile
+│       │       │   └───default-compile
+│       │       └───testCompile
+│       │           └───default-testCompile
+│       └───test-classes
+│           ├───com
+│           │   └───example
+│           │       └───tutorial
+│           ├───io
+│           │   └───cdap
+│           │       ├───directives
+│           │       │   ├───aggregates
+│           │       │   ├───column
+│           │       │   ├───currency
+│           │       │   ├───datamodel
+│           │       │   ├───datetime
+│           │       │   ├───external
+│           │       │   ├───lookup
+│           │       │   ├───npl
+│           │       │   ├───parser
+│           │       │   ├───row
+│           │       │   ├───transformation
+│           │       │   ├───validation
+│           │       │   │   └───conformers
+│           │       │   └───writer
+│           │       ├───functions
+│           │       └───wrangler
+│           │           ├───clients
+│           │           ├───codec
+│           │           ├───config
+│           │           ├───datamodel
+│           │           ├───dq
+│           │           ├───executor
+│           │           ├───expression
+│           │           ├───i18n
+│           │           ├───lineage
+│           │           ├───parser
+│           │           ├───registry
+│           │           ├───statistics
+│           │           ├───utils
+│           │           └───validator
+│           └───user
+├───wrangler-demos
+│   ├───pipelines
+│   └───sample
+├───wrangler-docs
+│   ├───directives
+│   ├───functions
+│   ├───grammar
+│   ├───language
+│   └───service
+├───wrangler-proto
+│   ├───src
+│   │   ├───main
+│   │   │   └───java
+│   │   │       └───io
+│   │   │           └───cdap
+│   │   │               └───wrangler
+│   │   │                   └───proto
+│   │   │                       ├───adls
+│   │   │                       ├───bigquery
+│   │   │                       ├───connection
+│   │   │                       ├───db
+│   │   │                       ├───file
+│   │   │                       ├───gcs
+│   │   │                       ├───kafka
+│   │   │                       ├───recipe
+│   │   │                       │   └───v2
+│   │   │                       ├───s3
+│   │   │                       ├───schema
+│   │   │                       ├───spanner
+│   │   │                       └───workspace
+│   │   │                           └───v2
+│   │   └───test
+│   │       └───java
+│   │           └───io
+│   │               └───cdap
+│   │                   └───wrangler
+│   │                       └───proto
+│   └───target
+│       ├───classes
+│       │   └───io
+│       │       └───cdap
+│       │           └───wrangler
+│       │               └───proto
+│       │                   ├───adls
+│       │                   ├───bigquery
+│       │                   ├───connection
+│       │                   ├───db
+│       │                   ├───file
+│       │                   ├───gcs
+│       │                   ├───kafka
+│       │                   ├───recipe
+│       │                   │   └───v2
+│       │                   ├───s3
+│       │                   ├───schema
+│       │                   ├───spanner
+│       │                   └───workspace
+│       │                       └───v2
+│       ├───generated-sources
+│       │   └───annotations
+│       ├───generated-test-sources
+│       │   └───test-annotations
+│       ├───maven-archiver
+│       ├───maven-status
+│       │   └───maven-compiler-plugin
+│       │       ├───compile
+│       │       │   └───default-compile
+│       │       └───testCompile
+│       │           └───default-testCompile
+│       └───test-classes
+│           └───io
+│               └───cdap
+│                   └───wrangler
+│                       └───proto
+├───wrangler-service
+│   ├───src
+│   │   ├───main
+│   │   │   ├───java
+│   │   │   │   └───io
+│   │   │   │       └───cdap
+│   │   │   │           └───wrangler
+│   │   │   │               └───service
+│   │   │   │                   ├───adls
+│   │   │   │                   ├───bigquery
+│   │   │   │                   ├───common
+│   │   │   │                   ├───connections
+│   │   │   │                   ├───database
+│   │   │   │                   ├───directive
+│   │   │   │                   ├───explorer
+│   │   │   │                   ├───gcp
+│   │   │   │                   ├───gcs
+│   │   │   │                   ├───kafka
+│   │   │   │                   ├───macro
+│   │   │   │                   ├───s3
+│   │   │   │                   ├───schema
+│   │   │   │                   └───spanner
+│   │   │   └───resources
+│   │   └───test
+│   │       └───java
+│   │           └───io
+│   │               └───cdap
+│   │                   └───wrangler
+│   │                       ├───dataset
+│   │                       │   └───connections
+│   │                       └───service
+│   │                           ├───bigquery
+│   │                           ├───database
+│   │                           ├───directive
+│   │                           ├───explorer
+│   │                           ├───filesystem
+│   │                           ├───gcs
+│   │                           ├───kafka
+│   │                           └───schema
+│   └───target
+│       ├───classes
+│       │   ├───io
+│       │   │   └───cdap
+│       │   │       └───wrangler
+│       │   │           └───service
+│       │   │               ├───adls
+│       │   │               ├───bigquery
+│       │   │               ├───common
+│       │   │               ├───connections
+│       │   │               ├───database
+│       │   │               ├───directive
+│       │   │               ├───explorer
+│       │   │               ├───gcp
+│       │   │               ├───gcs
+│       │   │               ├───kafka
+│       │   │               ├───macro
+│       │   │               ├───s3
+│       │   │               ├───schema
+│       │   │               └───spanner
+│       │   └───META-INF
+│       ├───generated-sources
+│       │   └───annotations
+│       ├───generated-test-sources
+│       │   └───test-annotations
+│       ├───maven-archiver
+│       ├───maven-status
+│       │   └───maven-compiler-plugin
+│       │       ├───compile
+│       │       │   └───default-compile
+│       │       └───testCompile
+│       │           └───default-testCompile
+│       └───test-classes
+│           └───io
+│               └───cdap
+│                   └───wrangler
+│                       ├───dataset
+│                       │   └───connections
+│                       └───service
+│                           ├───bigquery
+│                           ├───database
+│                           ├───directive
+│                           ├───explorer
+│                           ├───filesystem
+│                           ├───gcs
+│                           ├───kafka
+│                           └───schema
+├───wrangler-storage
+│   ├───src
+│   │   ├───main
+│   │   │   └───java
+│   │   │       └───io
+│   │   │           └───cdap
+│   │   │               └───wrangler
+│   │   │                   ├───dataset
+│   │   │                   │   ├───connections
+│   │   │                   │   ├───recipe
+│   │   │                   │   ├───schema
+│   │   │                   │   ├───utils
+│   │   │                   │   └───workspace
+│   │   │                   └───store
+│   │   │                       ├───recipe
+│   │   │                       ├───upgrade
+│   │   │                       ├───utils
+│   │   │                       └───workspace
+│   │   └───test
+│   │       └───java
+│   │           └───io
+│   │               └───cdap
+│   │                   └───wrangler
+│   │                       ├───dataset
+│   │                       └───store
+│   │                           ├───recipe
+│   │                           ├───upgrade
+│   │                           └───workspace
+│   └───target
+│       ├───classes
+│       │   └───io
+│       │       └───cdap
+│       │           └───wrangler
+│       │               ├───dataset
+│       │               │   ├───connections
+│       │               │   ├───recipe
+│       │               │   ├───schema
+│       │               │   ├───utils
+│       │               │   └───workspace
+│       │               └───store
+│       │                   ├───recipe
+│       │                   ├───upgrade
+│       │                   ├───utils
+│       │                   └───workspace
+│       ├───generated-sources
+│       │   └───annotations
+│       ├───generated-test-sources
+│       │   └───test-annotations
+│       ├───maven-archiver
+│       ├───maven-status
+│       │   └───maven-compiler-plugin
+│       │       ├───compile
+│       │       │   └───default-compile
+│       │       └───testCompile
+│       │           └───default-testCompile
+│       └───test-classes
+│           └───io
+│               └───cdap
+│                   └───wrangler
+│                       ├───dataset
+│                       └───store
+│                           ├───recipe
+│                           ├───upgrade
+│                           └───workspace
+├───wrangler-test
+│   ├───src
+│   │   └───main
+│   │       └───java
+│   │           └───io
+│   │               └───cdap
+│   │                   └───wrangler
+│   │                       └───test
+│   │                           └───api
+│   └───target
+│       ├───classes
+│       │   └───io
+│       │       └───cdap
+│       │           └───wrangler
+│       │               └───test
+│       │                   └───api
+│       ├───generated-sources
+│       │   └───annotations
+│       ├───maven-archiver
+│       └───maven-status
+│           └───maven-compiler-plugin
+│               └───compile
+│                   └───default-compile
+└───wrangler-transform
+    ├───docs
+    ├───icons
+    ├───src
+    │   ├───e2e-test
+    │   │   ├───features
+    │   │   │   ├───Wrangler
+    │   │   │   └───WranglerUI
+    │   │   ├───java
+    │   │   │   └───io
+    │   │   │       └───cdap
+    │   │   │           └───plugin
+    │   │   │               ├───common
+    │   │   │               │   └───stepsdesign
+    │   │   │               └───wrangler
+    │   │   │                   ├───actions
+    │   │   │                   ├───runners
+    │   │   │                   └───stepsdesign
+    │   │   └───resources
+    │   │       ├───BQtesdata
+    │   │       │   └───BigQuery
+    │   │       ├───BQValidationExpectedFiles
+    │   │       └───testData
+    │   │           └───Wrangler
+    │   ├───main
+    │   │   └───java
+    │   │       └───io
+    │   │           └───cdap
+    │   │               └───wrangler
+    │   └───test
+    │       └───java
+    │           └───io
+    │               └───cdap
+    │                   └───wrangler
+    ├───target
+    │   ├───classes
+    │   │   ├───io
+    │   │   │   └───cdap
+    │   │   │       └───wrangler
+    │   │   └───META-INF
+    │   ├───generated-sources
+    │   │   └───annotations
+    │   ├───generated-test-sources
+    │   │   └───test-annotations
+    │   ├───maven-archiver
+    │   ├───maven-status
+    │   │   └───maven-compiler-plugin
+    │   │       ├───compile
+    │   │       │   └───default-compile
+    │   │       └───testCompile
+    │   │           └───default-testCompile
+    │   └───test-classes
+    │       └───io
+    │           └───cdap
+    │               └───wrangler
+    └───widgets
+
+I am a mern developer and working on java backend for the first time please help me thorugh out the projectplease  get thorugh the tree
+
+
+● (a) Grammar Modification (wrangler-core/src/main/antlr4/.../Directives.g4): 
+○ Add the lexer rules for BYTE_SIZE and TIME_DURATION (including helper 
+fragments BYTE_UNIT, TIME_UNIT). 
+○ Modify relevant parser rules (e.g., value, or create new specific rules like 
+byteSizeArg, timeDurationArg) to accept BYTE_SIZE and TIME_DURATION 
+tokens where appropriate for directive arguments. 
+○ Regenerate the ANTLR Java parser/lexer code using the appropriate build 
+process (e.g., mvn compile). 
+● (b) API Updates (wrangler-api module): 
+○ Create new Java classes ByteSize.java and TimeDuration.java extending Token 
+[wrangler-api/src/main/java/io/cdap/wrangler/api/parser/Token.java] 
+■ These classes should parse the token string (e.g., "10KB", "150ms") in 
+their constructor. 
+■ Provide methods to retrieve the value in a canonical unit (e.g., long 
+getBytes() for ByteSize) 
+○ Add BYTE_SIZE and TIME_DURATION to the Token Types 
+○ Update usage definition and token definition to support specifying these new 
+token types as valid directive arguments. 
+● (c) Core Parser Updates (wrangler-core module): 
+○ Modify by adding visit methods for the parser rules created/modified in step 
+3a (e.g., visitByteSizeArg, visitTimeDurationArg, or modifying visitValue if 
+applicable). 
+○ Hint : chk ctx.getText()). 
+○ Add the created token instances to the TokenGroup. 
+● (d) New Directive Implementation (wrangler-core module): 
+○ Create a new directive class, which can do aggregation, implementing the 
+Directive interface  
+○ UsageDefinition (define()): The directive should accept at least four 
+arguments: 
+1. ColumnName (source column with byte sizes). 
+2. ColumnName (source column with time durations). 
+3. ColumnName (target column name for total size). 
+4. ColumnName (target column name for total or average time). 
+Optionally, add arguments to specify output units (e.g., 'MB', 'GB', 
+'seconds', 'minutes') or aggregation type (total, average). 
+○ Initialization : Store the source and target column names provided in the 
+arguments. 
+○ Execution : 
+■ This directive should operate as an aggregate. So you need a store to 
+accumulate totals. Think about it. Hint : Chk ExecutorContext 
+■ For each row: 
+■ Read the byte size value from the source size column. 
+■ Read the time duration value from the source time column. 
+■ Add these values (converted to canonical units like bytes and 
+nanoseconds) to running totals stored in the Store. 
+■ Finalization : This method (if using RecipePipeline's aggregation 
+capabilities) or logic within the last execute call needs to: 
+■ Retrieve the final totals from the Store. 
+■ Perform unit conversions if required by arguments (e.g., convert total 
+bytes to MB, total nanoseconds to seconds). 
+■ Return a single new Row containing the target columns with the 
+calculated aggregate values (e.g., total_size_mb, total_time_sec). 
+● (e) Testing (wrangler-core module): 
+○ Add unit tests for the ByteSize and TimeDuration classes, verifying correct 
+parsing and canonical value retrieval for various inputs (e.g., "10kb", "1.5MB", 
+"5ms", "2.1s"). 
+○ Add parser tests (e.g., in GrammarBasedParserTest.java or 
+RecipeCompilerTest.java to ensure recipes using the new syntax are parsed 
+correctly and invalid syntax is rejected. 
+○ Add comprehensive unit tests for the new AggregateStats directive. See the 
+Test Case Specification below. 
+4. Test Case Specification: Aggregation 
+● Input Data: Create a list of Row objects or parse a simple file representing 
+sample log or transaction data. 
+E.g You can use TestingRig 
+● Recipe: 
+String[] recipe = new String[] { 
+// Example: Aggregate size (output MB), total time (output seconds) 
+"aggregate-stats :data_transfer_size :response_time total_size_mb 
+total_time_sec" 
+// Add variations for average, median, p95, p99 and  different output units if 
+implemented 
+}; 
+● Execution: Use TestingRig.execute(recipe, rows) to run the recipe. 
+● Expected Output: Assert that the output contains a single row with the correctly 
+calculated aggregate values. 
+○ Size Calculation: Sum all data_transfer_size values (converted to bytes) and 
+then convert the final sum to Megabytes (MB) for the total_size_mb column 
+(using 1 MB = 1024 * 1024 bytes or 1000 * 1000 bytes - be consistent!). 
+○ Time Calculation: Sum all response_time values (converted to nanoseconds 
+or milliseconds) and then convert the final sum to seconds for the 
+total_time_sec column. (If implementing average, divide by the number of 
+rows before unit conversion). 
+○ Example assertion structure: 
+// results = TestingRig.execute(recipe, rows); 
+Assert.assertEquals(1, results.size()); 
+Assert.assertEquals(expectedTotalSizeInMB, 
+results.get(0).getValue("total_size_mb"), 0.001); // Use tolerance for 
+f
+ loat/double 
+Assert.assertEquals(expectedTotalTimeInSeconds, 
+results.get(0).getValue("total_time_sec"), 0.001); 
+
+
+
+
+
+//These are my task please get thorugh them and explain me the flow i can go in
+
+
+How to add BYTE_SIZE and TIME_DURATION tokens in Directives.g4?
+
+BYTE_UNIT and TIME_UNIT fragments – how to write them? What regex should I use?
+
+value rule me kya changes karu so that it can take these new token types?
+
+Can I create separate byteSizeArg and timeDurationArg rules or better to edit value?
+
+I made a change in grammar and got this: `no viable alternative at input` – what does that even mean? where is the issue?
+
+
+[INFO] Wrangler ........................................... SUCCESS  
+[INFO] Wrangler API ....................................... SUCCESS  
+[INFO] Wrangler REST Protocol Classes ..................... SUCCESS  
+[INFO] Wrangler Core ...................................... FAILURE  
+[ERROR] Failed to execute goal maven-compiler-plugin  
+[ERROR] cannot find symbol: class ParserRule  
+[ERROR] cannot find symbol: class UsageDefinition  
+[ERROR] package io.cdap.wrangler.api.row does not exist  
+[ERROR] cannot find symbol: class Directive  
+[ERROR] AggregateStats does not override abstract method  
+[ERROR] cannot find symbol: Row  
+[ERROR] variable UsageDefinition not found  
+[ERROR] method does not override from supertype  
+[ERROR] etc...
+
+help me with this error
+
+
+what is the differeence between nvm compile and mvn clean install dskiptests
+
+
+why am i getting rag errors again and again
+
+
+please help me with the licenses
+
+One full ByteSize.java class chahiye – takes "10KB", "1.5MB" etc. and gives me canonical bytes. Can you write it?
+
+Same for TimeDuration.java – give proper class that gives milliseconds or nanoseconds.
+
+My regex is not working properly for inputs like ".5MB" or "10kb" in lowercase. Please help fix this.
+
+I added token types in TokenType.java but it’s not being recognized in some places. Anything else I need to update?
+
+I made a new directive AggregateStats.java but I’m getting build errors. Something about "Row", "Directive", and "UsageDefinition" not found. Can you help solve this?
+
+
+
+
+Tell me how to fix these compilation errors step by step. I think I missed some imports or maybe wrong module used?
+
+I don’t understand which module these imports should come from: `Row`, `UsageDefinition`, `Directive`.
+
+Can you tell me correct imports and file placement for the directive?
+
+In execute method I want to store values across rows – should I use `ExecutorContext.getStore()`?
+
+How to structure init, execute and finalize logic for an aggregate directive? Show with full example.
+
+
+[ERROR] error(50): Directives.g4:329:0: syntax error: ' ' came as a complete surprise to me
+[ERROR] C:\Users\Jagji\OneDrive\Desktop\wrangler\wrangler-core\src\main\antlr4\io\cdap\wrangler\parser\Directives.g4 [329:0]: syntax error: ' ' came as a complete surprise to me   
+[ERROR] error(50): Directives.g4:329:2: syntax error: ' ' came as a complete surprise to me
+[ERROR] C:\Users\Jagji\OneDrive\Desktop\wrangler\wrangler-core\src\main\antlr4\io\cdap\wrangler\parser\Directives.g4 [329:2]: syntax error: ' ' came as a complete surprise to me   
+[ERROR] error(50): Directives.g4:330:0: syntax error: ' ' came as a complete surprise to me
+[ERROR] C:\Users\Jagji\OneDrive\Desktop\wrangler\wrangler-core\src\main\antlr4\io\cdap\wrangler\parser\Directives.g4 [330:0]: syntax error: ' ' came as a complete surprise to me   
+[ERROR] error(50): Directives.g4:329:0: syntax error: ' ' came as a complete surprise to me
+[ERROR] C:\Users\Jagji\OneDrive\Desktop\wrangler\wrangler-core\src\main\antlr4\io\cdap\wrangler\parser\Directives.g4 [329:0]: syntax error: ' ' came as a complete surprise to me   
+[ERROR] error(50): Directives.g4:329:2: syntax error: ' ' came as a complete surprise to me
+[ERROR] C:\Users\Jagji\OneDrive\Desktop\wrangler\wrangler-core\src\main\antlr4\io\cdap\wrangler\parser\Directives.g4 [329:2]: syntax error: ' ' came as a complete surprise to me   
+[ERROR] error(50): Directives.g4:330:0: syntax error: ' ' came as a complete surprise to me
+[ERROR] C:\Users\Jagji\OneDrive\Desktop\wrangler\wrangler-core\src\main\antlr4\io\cdap\wrangler\parser\Directives.g4 [330:0]: syntax error: ' ' came as a complete surprise to me   
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for Wrangler 4.12.0-SNAPSHOT:
+[INFO]
+[INFO] Wrangler ........................................... SUCCESS [  0.642 s]
+[INFO] Wrangler API ....................................... SUCCESS [  0.146 s]
+[INFO] Wrangler REST Protocol Classes ..................... SUCCESS [  0.136 s]
+[INFO] Wrangler Core ...................................... FAILURE [  2.741 s]
+[INFO] Wrangler Storage ................................... SKIPPED
+[INFO] Wrangler Service ................................... SKIPPED
+[INFO] Wrangler Testing Framework ......................... SKIPPED
+[INFO] Wrangler Transform ................................. SKIPPED
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  4.374 s
+[INFO] Finished at: 2025-04-11T23:51:16+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.antlr:antlr4-maven-plugin:4.7:antlr4 (default) on project wrangler-core: ANTLR 4 caught 6 build errors. -> [Help 1]
+org.apache.maven.lifecycle.LifecycleExecutionException: Failed to execute goal org.antlr:antlr4-maven-plugin:4.7:antlr4 (default) on project wrangler-core: ANTLR 4 caught 6 build errors.
+    at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute2 (MojoExecutor.java:333)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute (MojoExecutor.java:316)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:212)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:174)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.access$000 (MojoExecutor.java:75)
+    at org.apache.maven.lifecycle.internal.MojoExecutor$1.run (MojoExecutor.java:162)
+    at org.apache.maven.plugin.DefaultMojosExecutionStrategy.execute (DefaultMojosExecutionStrategy.java:39)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:159)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:105)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:73)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:53)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:118)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:261)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:173)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:101)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:906)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:283)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:206)
+    at jdk.internal.reflect.DirectMethodHandleAccessor.invoke (DirectMethodHandleAccessor.java:103)
+    at java.lang.reflect.Method.invoke (Method.java:580)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:255)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:201)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:361)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:314)
+Caused by: org.apache.maven.plugin.MojoExecutionException: ANTLR 4 caught 6 build errors.
+    at org.antlr.mojo.antlr4.Antlr4Mojo.execute (Antlr4Mojo.java:301)
+    at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo (DefaultBuildPluginManager.java:126)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute2 (MojoExecutor.java:328)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute (MojoExecutor.java:316)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:212)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:174)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.access$000 (MojoExecutor.java:75)
+    at org.apache.maven.lifecycle.internal.MojoExecutor$1.run (MojoExecutor.java:162)
+    at org.apache.maven.plugin.DefaultMojosExecutionStrategy.execute (DefaultMojosExecutionStrategy.java:39)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:159)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:105)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:73)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:53)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:118)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:261)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:173)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:101)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:906)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:283)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:206)
+    at jdk.internal.reflect.DirectMethodHandleAccessor.invoke (DirectMethodHandleAccessor.java:103)
+    at java.lang.reflect.Method.invoke (Method.java:580)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:255)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:201)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:361)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:314)
+[ERROR]
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
+[ERROR]
+[ERROR] After correcting the problems, you can resume the build with the command
+[ERROR]   mvn <args> -rf :wrangler-core
+
+
+Can you write a working test case for this directive? Should test total size in MB and total time in seconds.
+
+How to write unit test for ByteSize? I want to check parsing for "10KB", "1.5MB", etc.
+
+Same for TimeDuration – write a small test that checks for ms to ns conversion.
+
+I want to add a usage section in README.md with this kind of line:  
+`aggregate-stats :col1 :col2 total_size_mb total_time_sec`  
+Can you help me write it nicely?
+
+This whole project has many folders – api, core, service etc. Can you tell me what goes where? I don’t know where to put directive or test.
+
+I got another rag error from grammar after I added BYTE_SIZE – even after mvn compile. Why? Lexer not picking it up?
+
+Sometimes I ask you to just give me the full class. Don’t explain, just code.
+
+My prompts are usually long because I want AI to get full context. I explain what I’ve done and what’s not working. I don’t just say “fix this”. I like detailed back and forth.
+
+Every task I asked you help for something.
+
+
+4. Test Case Specification: Aggregation 
+● Input Data: Create a list of Row objects or parse a simple file representing 
+sample log or transaction data. 
+E.g You can use TestingRig 
+● Recipe: 
+String[] recipe = new String[] { 
+// Example: Aggregate size (output MB), total time (output seconds) 
+"aggregate-stats :data_transfer_size :response_time total_size_mb 
+total_time_sec" 
+// Add variations for average, median, p95, p99 and  different output units if 
+implemented 
+}; 
+● Execution: Use TestingRig.execute(recipe, rows) to run the recipe. 
+● Expected Output: Assert that the output contains a single row with the correctly 
+calculated aggregate values. 
+○ Size Calculation: Sum all data_transfer_size values (converted to bytes) and 
+then convert the final sum to Megabytes (MB) for the total_size_mb column 
+(using 1 MB = 1024 * 1024 bytes or 1000 * 1000 bytes - be consistent!). 
+○ Time Calculation: Sum all response_time values (converted to nanoseconds 
+or milliseconds) and then convert the final sum to seconds for the 
+total_time_sec column. (If implementing average, divide by the number of 
+rows before unit conversion). 
+○ Example assertion structure: 
+// results = TestingRig.execute(recipe, rows); 
+Assert.assertEquals(1, results.size()); 
+Assert.assertEquals(expectedTotalSizeInMB, 
+results.get(0).getValue("total_size_mb"), 0.001); // Use tolerance for 
+f
+ loat/double 
+Assert.assertEquals(expectedTotalTimeInSeconds, 
+results.get(0).getValue("total_time_sec"), 0.001);
+
+please revisit this and help me with this
+
+i am getting errors in it
