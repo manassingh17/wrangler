@@ -46,30 +46,32 @@ recipe
  ;
 
 statements
- :  ( Comment | macro | directive ';' | pragma ';' | ifStatement)*
+ : ( Comment | macro | directive ';' | pragma ';' | ifStatement )*
  ;
 
 directive
  : command
-  (   codeblock
-    | identifier
-    | macro
-    | text
-    | number
-    | bool
-    | column
-    | colList
-    | numberList
-    | boolList
-    | stringList
-    | numberRanges
-    | properties
-  )*?
-  ;
+   ( codeblock
+   | identifier
+   | macro
+   | text
+   | number
+   | bool
+   | column
+   | colList
+   | numberList
+   | boolList
+   | stringList
+   | numberRanges
+   | properties
+   | byteSizeArg         // newly added parser rule for BYTE_SIZE token argument
+   | timeDurationArg     // newly added parser rule for TIME_DURATION token argument
+   )*?
+ ;
 
 ifStatement
   : ifStat elseIfStat* elseStat? '}'
-  ;
+ ;
 
 ifStat
   : 'if' expression '{' statements
@@ -88,7 +90,7 @@ expression
   ;
 
 forStatement
- : 'for' '(' Identifier '=' expression ';' expression ';' expression ')' '{'  statements '}'
+ : 'for' '(' Identifier '=' expression ';' expression ';' expression ')' '{' statements '}'
  ;
 
 macro
@@ -116,11 +118,11 @@ identifier
  ;
 
 properties
- : 'prop' ':' OBrace (propertyList)+  CBrace
+ : 'prop' ':' OBrace (propertyList)+ CBrace
  | 'prop' ':' OBrace OBrace (propertyList)+ CBrace { notifyErrorListeners("Too many start paranthesis"); }
  | 'prop' ':' OBrace (propertyList)+ CBrace CBrace { notifyErrorListeners("Too many start paranthesis"); }
  | 'prop' ':' (propertyList)+ CBrace { notifyErrorListeners("Missing opening brace"); }
- | 'prop' ':' OBrace (propertyList)+  { notifyErrorListeners("Missing closing brace"); }
+ | 'prop' ':' OBrace (propertyList)+ { notifyErrorListeners("Missing closing brace"); }
  ;
 
 propertyList
@@ -128,11 +130,11 @@ propertyList
  ;
 
 property
- : Identifier '=' ( text | number | bool )
+ : Identifier '=' ( text | number | bool | byteSizeArg | timeDurationArg )
  ;
 
 numberRanges
- : numberRange ( ',' numberRange)*
+ : numberRange ( ',' numberRange )*
  ;
 
 numberRange
@@ -140,7 +142,7 @@ numberRange
  ;
 
 value
- : String | Number | Column | Bool
+ : String | Number | Column | Bool | byteSizeArg | timeDurationArg
  ;
 
 ecommand
@@ -167,6 +169,10 @@ bool
  : Bool
  ;
 
+/* New parser rules for our new token types */
+byteSizeArg : BYTE_SIZE ;
+timeDurationArg : TIME_DURATION ;
+
 condition
  : OBrace (~CBrace | condition)* CBrace
  ;
@@ -176,7 +182,7 @@ command
  ;
 
 colList
- : Column (','  Column)+
+ : Column (',' Column)+
  ;
 
 numberList
@@ -215,14 +221,14 @@ StartsWith : '=^';
 NotStartsWith : '!^';
 EndsWith : '=$';
 NotEndsWith : '!$';
-PlusEqual : '+=';
-SubEqual : '-=';
-MulEqual : '*=';
-DivEqual : '/=';
-PerEqual : '%=';
-AndEqual : '&=';
-OrEqual  : '|=';
-XOREqual : '^=';
+PlusEqual : '+=' ;
+SubEqual : '-=' ;
+MulEqual : '*=' ;
+DivEqual : '/=' ;
+PerEqual : '%=' ;
+AndEqual : '&=' ;
+OrEqual  : '|=' ;
+XOREqual : '^=' ;
 Pow      : '^';
 External : '!';
 GT       : '>';
@@ -247,7 +253,6 @@ BackSlash: '\\';
 Dollar   : '$';
 Tilde    : '~';
 
-
 Bool
  : 'true'
  | 'false'
@@ -255,6 +260,24 @@ Bool
 
 Number
  : Int ('.' Digit*)?
+ ;
+
+/* New helper fragments for unit types */
+fragment BYTE_UNIT
+ : 'B' | 'KB' | 'MB' | 'GB' | 'TB'
+ ;
+
+fragment TIME_UNIT
+ : 'ns' | 'us' | 'ms' | 's' | 'sec' | 'm' | 'min' | 'h' | 'hr' | 'd'
+ ;
+
+/* New Lexer tokens for byte size and time duration */
+BYTE_SIZE
+ : Int ('.' Digit*)? BYTE_UNIT
+ ;
+
+TIME_DURATION
+ : Int ('.' Digit*)? TIME_UNIT
  ;
 
 Identifier
@@ -270,33 +293,35 @@ Column
  ;
 
 String
- : '\'' ( EscapeSequence | ~('\'') )* '\''
- | '"'  ( EscapeSequence | ~('"') )* '"'
+ : '\'' ( EscapeSequence | ~('\''))* '\''
+ | '"' ( EscapeSequence | ~('"'))* '"'
  ;
 
 EscapeSequence
-   :   '\\' ('b'|'t'|'n'|'f'|'r'|'"'|'\''|'\\')
-   |   UnicodeEscape
-   |   OctalEscape
+   : '\\' ('b'|'t'|'n'|'f'|'r'|'"'|'\''|'\\')
+   | UnicodeEscape
+   | OctalEscape
    ;
 
 fragment
 OctalEscape
-   :   '\\' ('0'..'3') ('0'..'7') ('0'..'7')
-   |   '\\' ('0'..'7') ('0'..'7')
-   |   '\\' ('0'..'7')
+   : '\\' ('0'..'3') ('0'..'7') ('0'..'7')
+   | '\\' ('0'..'7') ('0'..'7')
+   | '\\' ('0'..'7')
    ;
 
 fragment
 UnicodeEscape
-   :   '\\' 'u' HexDigit HexDigit HexDigit HexDigit
+   : '\\' 'u' HexDigit HexDigit HexDigit HexDigit
    ;
 
 fragment
-   HexDigit : ('0'..'9'|'a'..'f'|'A'..'F') ;
+HexDigit
+   : ('0'..'9' | 'a'..'f' | 'A'..'F')
+;
 
 Comment
- : ('//' ~[\r\n]* | '/*' .*? '*/' | '--' ~[\r\n]* ) -> skip
+ : ('//' ~[\r\n]* | '/' .? '/' | '--' ~[\r\n]) -> skip
  ;
 
 Space
@@ -304,10 +329,9 @@ Space
  ;
 
 fragment Int
- : '-'? [1-9] Digit* [L]*
- | '0'
+ : '-'? [1-9] Digit* | '0'
  ;
 
-fragment Digit
- : [0-9]
- ;
+fragment Digit
+:[0-9]
+;

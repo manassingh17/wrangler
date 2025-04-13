@@ -49,7 +49,8 @@ public enum TokenType implements Serializable {
    * name within the recipe.
    */
   DIRECTIVE_NAME,
-
+  BYTE_SIZE,
+  TIME_DURATION,
   /**
    * Represents the enumerated type for the object of {@code ColumnName} type.
    * This type is associated with token that represents the column as defined
